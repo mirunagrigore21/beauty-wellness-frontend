@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logare | Beauty & Wellness</title>
+    <link rel="icon" type="image/png" href="poze/icon2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --roz: #F8B4C8;
+            --roz-deschis: #FDE8F0;
+            --auriu: #C9A84C;
+            --auriu-deschis: #F5E6C8;
+            --alb: #FFFFFF;
+            --gri: #666666;
+            --negru: #333333;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('poze/beauty&wellness.png');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* overlay inchis */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+        }
+
+        /* containerul principal cu cele doua coloane */
+        .login-container {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 900px;
+            min-height: 580px;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+        }
+
+        /* coloana stanga decorativa */
+        .login-left {
+            background: linear-gradient(135deg, var(--roz), var(--auriu));
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .login-left img {
+            height: 80px;
+            margin-bottom: 30px;
+            filter: brightness(10);
+        }
+
+        .login-left h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .login-left p {
+            color: rgba(255,255,255,0.85);
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        /*punctele decorative */
+        .decorative-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+        }
+
+        .dot.active { background: white; }
+
+        /* coloana dreapta formularele */
+        .login-right {
+            background: white;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* tab-urile pentru login si register */
+        .tabs {
+            display: flex;
+            margin-bottom: 35px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gri);
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab.active {
+            color: var(--auriu);
+            border-bottom-color: var(--auriu);
+        }
+
+        /* formularele */
+        .form { display: none; }
+        .form.active { display: block; }
+
+        .form h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: var(--negru);
+        }
+
+        .form p {
+            color: var(--gri);
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        /* grupul unui camp de input */
+        .input-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--gri);
+            margin-bottom: 6px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Lato', sans-serif;
+            outline: none;
+            transition: all 0.3s;
+            color: var(--negru);
+        }
+
+        .input-group input:focus {
+            border-color: var(--auriu);
+            box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
+        }
+
+        /* doua campuri pe acelasi rand */
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* butonul principal */
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            margin-top: 5px;
+            box-shadow: 0 8px 20px rgba(201, 168, 76, 0.3);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(201, 168, 76, 0.4);
+        }
+
+        /* link-ul de intoarcere acasa */
+        .back-home {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-home a {
+            color: var(--gri);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.3s;
+        }
+
+        .back-home a:hover { color: var(--auriu); }
+
+        /* mesajele de eroare si succes */
+        .message {
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .message.error {
+            background: #FFE5E5;
+            color: #e74c3c;
+            border: 1px solid #ffcccc;
+        }
+
+        .message.success {
+            background: #E5FFE5;
+            color: #27ae60;
+            border: 1px solid #ccffcc;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+
+        <!-- coloana stanga decorativa -->
+        <div class="login-left">
+            <img src="poze/logo.png" alt="Beauty & Wellness Logo">
+            <h2>Bine ai venit!</h2>
+            <p>Descoperă lumea frumuseții și relaxării. Programează-te online în câteva secunde.</p>
+            <div class="decorative-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+
+        <!-- coloana dreapta cu formulare -->
+        <div class="login-right">
+
+            <!-- tab-urile login / register -->
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('login')">Autentificare</div>
+                <div class="tab" onclick="switchTab('register')">Cont Nou</div>
+            </div>
+
+            <!-- mesaj de eroare sau succes -->
+            <div class="message" id="message"></div>
+
+            <!-- FORMULAR LOGIN -->
+            <div class="form active" id="loginForm">
+                <h3>Bună ziua! 👋</h3>
+                <p>Introdu datele tale pentru a te autentifica</p>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="email@exemplu.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Parolă</label>
+                    <input type="password" id="loginPassword" placeholder="Parola ta">
+                </div>
+
+                <button class="btn-submit" onclick="login()">Autentificare</button>
+
+                <div class="back-home">
+                    <a href="index.html">← Înapoi la pagina principală</a>
+                </div>
+            </div>
+
+            <!-- FORMULAR REGISTER -->
+            <div class="form" id="registerForm">
+                <h3>Creează cont 🌸</h3>
+                <p>Completează datele pentru a te înregistra</p>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Prenume</label>
+                        <input type="text" id="regFirstName" placeholder="Prenume">
+                    </div>
+                    <div class="input-group">
+                        <label>Nume</label>
+                        <input type="text" id="regLastName" placeholder="Nume de familie">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" placeholder="email@exemplu.com">
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Telefon</label>
+                        <input type="tel" id="regPhone" placeholder="07xxxxxxxx">
+                    </div>
+                    <div class="input-group">
+                        <label>Data nașterii</label>
+                        <input type="date" id="regBirthDate">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Parolă</label>
+                    <input type="password" id="regPassword" placeholder="Minim 6 caractere">
+                </div>
+
+                <button class="btn-submit" onclick="register()">Creează Cont</button>
+
+                <div class="back-home">
+                    <a href="index.html">← Înapoi la pagina principală</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080';
+
+        //schimba intre tab urile login si register
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
+
+            if (tab === 'login') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+            ascundeMessage();
+        }
+
+        //afiseaza mesaj eroare sau succes
+        function afiseazaMessage(text, tip) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message ${tip}`;
+            msg.style.display = 'block';
+        }
+
+        function ascundeMessage() {
+            document.getElementById('message').style.display = 'none';
+        }
+
+        //salveaza datele utilizatorului in localStorage
+        function salveazaUser(data) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userName', data.name);
+            localStorage.setItem('userEmail', data.email);
+            localStorage.setItem('userRole', data.role);
+        }
+
+        //redirectioneaza dupa login in functie de rol
+        function redirectDupaLogin(role) {
+            if (role === 'Administrator') {
+                window.location.href = 'dashboard-admin.html';
+            } else if (role === 'Angajat') {
+                window.location.href = 'dashboard-angajat.html';
+            } else {
+                window.location.href = 'dashboard-client.html';
+            }
+        }
+
+        //functia de login
+        async function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!email || !password) {
+                afiseazaMessage('Completează toate câmpurile!', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    salveazaUser(data);
+                    afiseazaMessage('Autentificare reușită! Se redirecționează...', 'success');
+                    setTimeout(() => redirectDupaLogin(data.role), 1000);
+                } else {
+                    afiseazaMessage('Email sau parolă incorectă!', 'error');
+                }
+            } catch (error) {
+                afiseazaMessage('Serverul nu răspunde. Verifică dacă backend-ul rulează!', 'error');
+            }
+        }
+
+        //functia de register
+        async function register() {
+            const firstName = document.getElementById('regFirstName').value.trim();
+            const lastName = document.getElementById('regLastName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const birthDate = document.getElementById('regBirthDate').value;
+            const password = document.getElementById('regPassword').value.trim();
+
+            if (!firstName || !lastName || !email || !phone || !birthDate || !password) {
+                afiseazaMessage('Completează toate câmpurile!', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                afiseazaMessage('Parola trebuie să aibă minim 6 caractere!', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ firstName, lastName, email, phone, birthDate, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    salveazaUser(data);
+                    afiseazaMessage('Cont creat cu succes! Se redirecționează...', 'success');
+                    setTimeout(() => window.location.href = 'dashboard-client.html', 1000);
+                } else {
+                    const err = await response.json();
+                    afiseazaMessage(err.message || 'Eroare la înregistrare!', 'error');
+                }
+            } catch (error) {
+                afiseazaMessage('Serverul nu răspunde. Verifică dacă backend-ul rulează!', 'error');
+            }
+        }
+
+        //login la apasarea Enter
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const activeForm = document.querySelector('.form.active').id;
+                if (activeForm === 'loginForm') login();
+                else register();
+            }
+        });
+    </script>
+
+</body>
+</html>

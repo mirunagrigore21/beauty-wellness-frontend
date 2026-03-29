@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termeni și Condiții | Beauty & Wellness</title>
+    <link rel="icon" type="image/png" href="poze/icon2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --roz: #F8B4C8;
+            --roz-deschis: #FDE8F0;
+            --auriu: #C9A84C;
+            --auriu-deschis: #F5E6C8;
+            --gri: #666666;
+            --negru: #333333;
+        }
+        body { font-family: 'Lato', sans-serif; color: var(--negru); background: #f8f9fa; }
+
+        nav {
+            position: fixed; top: 0; width: 100%;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(10px);
+            padding: 12px 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(201,168,76,0.1);
+            border-bottom: 1px solid var(--roz);
+        }
+
+        .logo img { height: 55px; object-fit: contain; }
+
+        .nav-links { display: flex; list-style: none; gap: 25px; align-items: center; }
+        .nav-links a {
+            text-decoration: none; color: var(--negru);
+            font-size: 13px; letter-spacing: 1px;
+            text-transform: uppercase; transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--auriu); }
+        .btn-login {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            color: white !important; padding: 10px 25px; border-radius: 25px;
+        }
+
+        .hero-section {
+            margin-top: 80px;
+            background: linear-gradient(135deg, var(--roz-deschis), var(--auriu-deschis));
+            padding: 60px 50px;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px; margin-bottom: 15px;
+        }
+
+        .hero-section h1 span {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-section p { color: var(--gri); font-size: 16px; }
+
+        .content {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 0 30px 80px;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 15px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--auriu);
+        }
+
+        .section-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: var(--auriu);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-card p {
+            color: var(--gri);
+            line-height: 1.8;
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        .section-card p:last-child { margin-bottom: 0; }
+
+        .section-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .section-card ul li {
+            color: var(--gri);
+            font-size: 15px;
+            line-height: 1.8;
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .section-card ul li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--auriu);
+            font-size: 10px;
+            top: 8px;
+        }
+
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px 50px;
+            text-align: center;
+        }
+
+        .footer-logo img { height: 50px; margin-bottom: 15px; }
+
+        .footer-links {
+            display: flex; justify-content: center;
+            gap: 25px; margin: 15px 0; flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #aaa; text-decoration: none;
+            font-size: 13px; transition: color 0.3s;
+        }
+
+        .footer-links a:hover { color: var(--auriu); }
+        .footer-copy { color: #555; font-size: 12px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <a href="index.html"><img src="poze/logo.png" alt="Beauty & Wellness"></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Acasă</a></li>
+            <li><a href="servicii.html">Servicii</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="login.html" class="btn-login">Logare</a></li>
+        </ul>
+    </nav>
+
+    <div class="hero-section">
+        <h1>Termeni și <span>Condiții</span></h1>
+        <p>Vă rugăm să citiți cu atenție termenii și condițiile înainte de a utiliza serviciile noastre</p>
+    </div>
+
+    <div class="content">
+
+        <div class="section-card">
+            <h2>📋 1. Acceptarea Termenilor</h2>
+            <p>Prin utilizarea platformei Beauty & Wellness, confirmați că ați citit, înțeles și acceptat toți termenii și condițiile prezentate în acest document. Dacă nu sunteți de acord cu acești termeni, vă rugăm să nu utilizați serviciile noastre.</p>
+            <p>Beauty & Wellness își rezervă dreptul de a modifica acești termeni în orice moment, cu notificarea prealabilă a utilizatorilor prin email sau prin afișarea pe platformă.</p>
+        </div>
+
+        <div class="section-card">
+            <h2>👤 2. Contul de Utilizator</h2>
+            <p>Pentru a accesa toate funcționalitățile platformei, este necesară crearea unui cont personal. Prin crearea contului, vă asumați responsabilitatea pentru:</p>
+            <ul>
+                <li>Menținerea confidențialității datelor de autentificare</li>
+                <li>Furnizarea de informații corecte și actualizate</li>
+                <li>Notificarea imediată în caz de utilizare neautorizată a contului</li>
+                <li>Toate activitățile efectuate în contul dumneavoastră</li>
+            </ul>
+        </div>
+
+        <div class="section-card">
+            <h2>📅 3. Politica de Programări</h2>
+            <p>Programările se fac exclusiv prin platforma online Beauty & Wellness. Vă rugăm să respectați următoarele reguli:</p>
+            <ul>
+                <li>Programările trebuie anulate cu cel puțin 24 de ore înainte</li>
+                <li>Neprezentarea la 3 programări consecutive va duce la blocarea contului</li>
+                <li>La 2 neprezentări consecutive, veți primi un avertisment</li>
+                <li>Conturile blocate pot fi deblocate prin contactarea salonului</li>
+                <li>Salonul își rezervă dreptul de a anula programările în cazuri excepționale</li>
+            </ul>
+        </div>
+
+        <div class="section-card">
+            <h2>💝 4. Programul de Fidelitate</h2>
+            <p>Programul de fidelitate Beauty & Wellness funcționează astfel:</p>
+            <ul>
+                <li>La fiecare programare finalizată, primiți 1 punct de loialitate</li>
+                <li>La acumularea a 5 puncte, primiți automat un cupon de reducere de 20 lei</li>
+                <li>Cupoanele sunt personale și nu pot fi transferate</li>
+                <li>Cupoanele trebuie prezentate la salon în momentul plății</li>
+                <li>Cupoanele expirate nu pot fi utilizate</li>
+            </ul>
+        </div>
+
+        <div class="section-card">
+            <h2>💳 5. Prețuri și Plăți</h2>
+            <p>Toate prețurile afișate pe platformă sunt în lei românești (RON) și includ TVA. Plata se efectuează la salon, în momentul finalizării serviciului. Beauty & Wellness își rezervă dreptul de a modifica prețurile cu notificare prealabilă.</p>
+        </div>
+
+        <div class="section-card">
+            <h2>⚖️ 6. Responsabilități</h2>
+            <p>Beauty & Wellness se angajează să ofere servicii de cea mai înaltă calitate, utilizând produse profesionale și personal calificat. Nu ne asumăm responsabilitatea pentru:</p>
+            <ul>
+                <li>Reacții alergice la produsele utilizate nedeclarate anterior</li>
+                <li>Rezultate care nu corespund așteptărilor subiective ale clientului</li>
+                <li>Daune cauzate de informații incorecte furnizate de client</li>
+            </ul>
+        </div>
+
+        <div class="section-card">
+            <h2>📞 7. Contact</h2>
+            <p>Pentru orice întrebări legate de acești termeni și condiții, ne puteți contacta la:</p>
+            <ul>
+                <li>Email: contact@beautywellness.ro</li>
+                <li>Telefon: 0700 000 000</li>
+                <li>Adresă: Str. Frumuseții nr. 10, București</li>
+            </ul>
+            <p style="margin-top: 15px;">Ultima actualizare: Martie 2026</p>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="footer-logo">
+            <img src="poze/logo.png" alt="Beauty & Wellness">
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Acasă</a>
+            <a href="servicii.html">Servicii</a>
+            <a href="index.html#contact">Contact</a>
+            <a href="termeni.html">Termeni și Condiții</a>
+            <a href="confidentialitate.html">Politică de Confidențialitate</a>
+        </div>
+        <div class="footer-copy">© 2026 Beauty & Wellness by M&G. Toate drepturile rezervate.</div>
+    </footer>
+
+</body>
+</html>

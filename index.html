@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty & Wellness</title>
+    <link rel="icon" type="image/png" href="poze/icon2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --roz: #F8B4C8;
+            --roz-deschis: #FDE8F0;
+            --auriu: #C9A84C;
+            --auriu-deschis: #F5E6C8;
+            --alb: #FFFFFF;
+            --gri: #666666;
+            --negru: #333333;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            color: var(--negru);
+            background-color: var(--alb);
+        }
+
+        /* NAVBAR */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(10px);
+            padding: 12px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(201, 168, 76, 0.1);
+            border-bottom: 1px solid var(--roz);
+            gap: 20px;
+        }
+
+        .logo img {
+            height: 65px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--negru);
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: 'Lato', sans-serif;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--auriu); }
+
+        .btn-login {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            color: white !important;
+            padding: 10px 25px;
+            border-radius: 25px;
+            transition: all 0.3s !important;
+            box-shadow: 0 4px 15px rgba(201, 168, 76, 0.3);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(201, 168, 76, 0.4) !important;
+        }
+
+        .nav-search {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--roz-deschis);
+            border-radius: 25px;
+            padding: 6px 6px 6px 15px;
+            border: 1px solid var(--roz);
+        }
+
+        .nav-search input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 13px;
+            width: 160px;
+            font-family: 'Lato', sans-serif;
+            color: var(--negru);
+        }
+
+        .nav-search input::placeholder { color: #aaa; }
+
+        .nav-search button {
+            background: var(--auriu);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .nav-search button:hover {
+            background: var(--roz);
+            transform: scale(1.1);
+        }
+
+        .nav-search-results {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-height: 250px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+            min-width: 300px;
+        }
+
+        .nav-search-result-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f5f5f5;
+            transition: background 0.2s;
+            font-size: 13px;
+        }
+
+        .nav-search-result-item:hover { background: var(--roz-deschis); }
+
+        /* HERO */
+        .hero {
+            height: 100vh;
+            background-image: url('poze/beauty&wellness.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /*overlay*/
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                rgba(0, 0, 0, 0.45) 0%,
+                rgba(0, 0, 0, 0.35) 100%);
+        }
+
+        .hero-content {
+            z-index: 1;
+            position: relative;
+        }
+
+        .hero-subtitle {
+            font-size: 13px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: white;
+            margin-bottom: 20px;
+            font-family: 'Lato', sans-serif;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.3);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 65px;
+            color: white;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.3);
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #f5d78e, #e8c05a, var(--auriu));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 30px;
+            max-width: 600px;
+            line-height: 1.7;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.2);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            font-family: 'Lato', sans-serif;
+            box-shadow: 0 8px 25px rgba(201, 168, 76, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(201, 168, 76, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            padding: 15px 40px;
+            border: 2px solid white;
+            border-radius: 30px;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            font-family: 'Lato', sans-serif;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--auriu);
+            transform: translateY(-3px);
+        }
+
+        /* SECTIUNI GENERALE */
+        section { padding: 80px 50px; }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            color: var(--negru);
+            margin-bottom: 15px;
+        }
+
+        .section-title h2 span {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, var(--roz), var(--auriu));
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--gri);
+            font-size: 16px;
+            max-width: 600px;
+            margin: 15px auto 0;
+            line-height: 1.7;
+        }
+
+        /* SERVICII */
+        .services { background: var(--roz-deschis); }
+
+        /* primele 5 butoane */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto 25px;
+        }
+
+        /* ultimele 3 butoane centrate */
+        .services-grid-bottom {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            text-decoration: none;
+            color: var(--negru);
+            border: 1px solid transparent;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(201, 168, 76, 0.2);
+            border-color: var(--auriu);
+        }
+
+        .service-icon { font-size: 40px; margin-bottom: 15px; }
+
+        .service-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .service-card p {
+            font-size: 13px;
+            color: var(--gri);
+            line-height: 1.5;
+        }
+
+        /* DE CE NOI */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card { text-align: center; padding: 30px; }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--roz), var(--auriu));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 25px rgba(201, 168, 76, 0.2);
+        }
+
+        .feature-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p { color: var(--gri); line-height: 1.7; font-size: 15px; }
+
+        /* CUM TE PROGRAMEZI */
+        .how-it-works { background: var(--auriu-deschis); }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .step-card { text-align: center; padding: 20px; }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 20px rgba(201, 168, 76, 0.3);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .step-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .step-card p { color: var(--gri); font-size: 14px; line-height: 1.6; }
+
+        /* CONTACT */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .contact-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: var(--auriu);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .contact-item span:first-child { font-size: 24px; margin-top: 3px; }
+
+        .contact-form input,
+        .contact-form textarea,
+        .contact-form select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-family: 'Lato', sans-serif;
+            font-size: 14px;
+            margin-bottom: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        /* mesaj formular contact */
+        .message {
+            display: none;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .message.success {
+            background: #E5FFE5;
+            color: #27ae60;
+            border: 1px solid #b2f2bb;
+        }
+
+        .message.error {
+            background: #FFE5E5;
+            color: #e74c3c;
+            border: 1px solid #ffc9c9;
+        }
+        
+        .contact-form input:focus,
+        .contact-form textarea:focus,
+        .contact-form select:focus { border-color: var(--auriu); }
+
+        .contact-form textarea { height: 120px; resize: none; }
+
+        /* FOOTER */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 50px;
+            text-align: center;
+        }
+
+        .footer-logo img {
+            height: 60px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover { color: var(--auriu); }
+
+        .footer-copy { color: #555; font-size: 12px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo">
+            <img src="poze/logo.png" alt="Beauty & Wellness">
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Acasă</a></li>
+            <li><a href="servicii.html">Servicii</a></li>
+            <li><a href="#programare">Programare</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li>
+                <!-- bara de search in navbar -->
+                <div class="nav-search">
+                    <input type="text" id="navSearchInput" placeholder="Caută serviciu...">
+                    <button onclick="cautaNavbar()">🔍</button>
+                    <div class="nav-search-results" id="navSearchResults"></div>
+                </div>
+            </li>
+            <li><a href="login.html" class="btn-login">Logare</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="acasa">
+        <div class="hero-content">
+            <p class="hero-subtitle">✨ Salon Premium de Beauty & Wellness</p>
+            <h1>Descoperă <span>Frumusețea</span><br>Ta Naturală</h1>
+            <p>Experiențe premium de înfrumusețare și relaxare,<br>adaptate perfect nevoilor tale.</p>
+            <div class="hero-buttons">
+                <a href="login.html" class="btn-primary">Programează-te Acum</a>
+                <a href="servicii.html" class="btn-secondary">Vezi Serviciile</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICII -->
+    <section class="services" id="servicii">
+        <div class="section-title">
+            <h2>Serviciile <span>Noastre</span></h2>
+            <p>Descoperă gama completă de tratamente și servicii de înfrumusețare</p>
+        </div>
+        <!-- primele 5 butoane -->
+        <div class="services-grid">
+            <a href="servicii.html?categorie=HAIR" class="service-card">
+                <div class="service-icon">💇‍♀️</div>
+                <h3>Coafură</h3>
+                <p>Tuns, vopsit, coafat și tratamente pentru păr</p>
+            </a>
+            <a href="servicii.html?categorie=NAILS" class="service-card">
+                <div class="service-icon">💅</div>
+                <h3>Unghii</h3>
+                <p>Manichiură, pedichiură și construcție unghii gel</p>
+            </a>
+            <a href="servicii.html?categorie=MAKEUP" class="service-card">
+                <div class="service-icon">💄</div>
+                <h3>Machiaj</h3>
+                <p>Machiaj de zi, seară și pentru mirese</p>
+            </a>
+            <a href="servicii.html?categorie=SKIN_CARE" class="service-card">
+                <div class="service-icon">✨</div>
+                <h3>Îngrijire Ten</h3>
+                <p>Curățare facială și tratamente cosmetice</p>
+            </a>
+            <a href="servicii.html?categorie=EYEBROWS" class="service-card">
+                <div class="service-icon">👁️</div>
+                <h3>Sprâncene</h3>
+                <p>Pensare, stilizare și laminare sprâncene</p>
+            </a>
+        </div>
+        <!-- ultimele 3 butoane-->
+        <div class="services-grid-bottom">
+            <a href="servicii.html?categorie=EYELASHES" class="service-card">
+                <div class="service-icon">👀</div>
+                <h3>Gene</h3>
+                <p>Extensii gene și lash lifting</p>
+            </a>
+            <a href="servicii.html?categorie=MASSAGE" class="service-card">
+                <div class="service-icon">🌿</div>
+                <h3>Masaj</h3>
+                <p>Masaj relaxare, terapeutic și anticelulitic</p>
+            </a>
+            <a href="servicii.html?categorie=SPA" class="service-card">
+                <div class="service-icon">🛁</div>
+                <h3>Spa</h3>
+                <p>Ritual spa și împachetări corporale</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- DE CE NOI -->
+    <section id="despre">
+        <div class="section-title">
+            <h2>De Ce Să Ne <span>Alegi</span></h2>
+            <p>Suntem dedicați oferirii celei mai bune experiențe de înfrumusețare</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">👩‍⚕️</div>
+                <h3>Experți Profesioniști</h3>
+                <p>Echipa noastră este formată din specialiști cu experiență și certificări internaționale</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌟</div>
+                <h3>Produse Premium</h3>
+                <p>Folosim exclusiv produse de înaltă calitate pentru cele mai bune rezultate</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>Programare Online</h3>
+                <p>Programează-te ușor și rapid direct de pe telefon sau laptop</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💝</div>
+                <h3>Program Fidelitate</h3>
+                <p>Acumulează puncte la fiecare programare și primești reduceri exclusive</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CUM FUNCTIONEAZA -->
+    <section class="how-it-works" id="programare">
+        <div class="section-title">
+            <h2>Cum Te <span>Programezi</span></h2>
+            <p>Procesul de programare este simplu și rapid în doar 4 pași</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Alege Serviciul</h3>
+                <p>Selectează serviciul dorit din gama noastră completă</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Alege Specialistul</h3>
+                <p>Selectează specialistul preferat disponibil</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Alege Data și Ora</h3>
+                <p>Selectează data și ora care ți se potrivește</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>Confirmă</h3>
+                <p>Confirmă programarea și ești gata!</p>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="login.html" class="btn-primary">Programează-te Acum</a>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="section-title">
+            <h2>Contactează-<span>ne</span></h2>
+            <p>Suntem aici pentru tine! Trimite-ne un mesaj sau vizitează-ne</p>
+        </div>
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3>Informații de Contact</h3>
+                <div class="contact-item">
+                    <span>📍</span>
+                    <div>
+                        <strong>Adresă</strong><br>
+                        <span style="color: var(--gri);">Str. Frumuseții nr. 10, București</span>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span>📞</span>
+                    <div>
+                        <strong>Telefon</strong><br>
+                        <span style="color: var(--gri);">0700 000 000</span>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span>📧</span>
+                    <div>
+                        <strong>Email</strong><br>
+                        <span style="color: var(--gri);">contact@beautywellness.ro</span>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span>🕐</span>
+                    <div>
+                        <strong>Program</strong><br>
+                        <span style="color: var(--gri);">Luni - Vineri: 09:00 - 19:00<br>Sâmbătă: 09:00 - 17:00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form">
+                <input type="text" placeholder="Numele tău complet">
+                <input type="tel" placeholder="Numărul de telefon">
+                <input type="email" placeholder="Adresa de email">
+                <select>
+                    <option value="">Selectează subiectul</option>
+                    <option>Informații despre servicii</option>
+                    <option>Programare</option>
+                    <option>Reclamație</option>
+                    <option>Altele</option>
+                </select>
+                <textarea placeholder="Mesajul tău..."></textarea>
+                <div id="contactMessage" class="message"></div>
+                <button class="btn-primary" style="width: 100%; border: none;" onclick="trimiteMesaj()"> Trimite Mesajul </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">
+            <img src="poze/logo.png" alt="Beauty & Wellness">
+        </div>
+        <p style="color: #aaa; margin-bottom: 20px;">Salonul tău de încredere pentru frumusețe și relaxare</p>
+        <div class="footer-links">
+            <a href="index.html">Acasă</a>
+            <a href="servicii.html">Servicii</a>
+            <a href="#contact">Contact</a>
+            <a href="termeni.html">Termeni și Condiții</a>
+            <a href="confidentialitate.html">Politică de Confidențialitate</a>
+        </div>
+        <div class="footer-copy">© 2026 Beauty & Wellness by M&G. Toate drepturile rezervate.</div>
+    </footer>
+
+    <script>
+        const API_URL = 'http://localhost:8080';
+
+        //cautare din navbar
+        async function cautaNavbar() {
+            const query = document.getElementById('navSearchInput').value.trim();
+            if (!query) return;
+            try {
+                const response = await fetch(`${API_URL}/api/salon-procedures`);
+                const servicii = await response.json();
+                const rezultate = servicii.filter(s =>
+                    s.name.toLowerCase().includes(query.toLowerCase())
+                );
+                const div = document.getElementById('navSearchResults');
+                if (rezultate.length === 0) {
+                    div.innerHTML = '<div class="nav-search-result-item">Nu s-au găsit servicii</div>';
+                } else {
+                    div.innerHTML = rezultate.slice(0, 5).map(s => `
+                        <div class="nav-search-result-item"
+                             onclick="window.location.href='servicii.html?categorie=${s.category}'">
+                            <strong>${s.name}</strong> — ${s.price} RON
+                        </div>
+                    `).join('');
+                }
+                div.style.display = 'block';
+            } catch (error) {
+                console.error('Backend oprit sau eroare:', error);
+            }
+        }
+
+        //cautare la tastare
+        document.getElementById('navSearchInput').addEventListener('input', function() {
+            if (this.value.length >= 2) cautaNavbar();
+            else document.getElementById('navSearchResults').style.display = 'none';
+        });
+
+        //cautare la Enter
+        document.getElementById('navSearchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') cautaNavbar();
+        });
+
+        //ascunde rezultatele la click in alta parte
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.nav-search')) {
+                document.getElementById('navSearchResults').style.display = 'none';
+            }
+        });
+        async function trimiteMesaj() {
+            const fullName = document.querySelector('input[placeholder="Numele tău complet"]').value.trim();
+            const phone = document.querySelector('input[placeholder="Numărul de telefon"]').value.trim();
+            const email = document.querySelector('input[placeholder="Adresa de email"]').value.trim();
+            const subject = document.querySelector('select').value;
+            const message = document.querySelector('textarea').value.trim();
+
+           if (!fullName || !phone || !email || !subject || !message) {
+                afiseazaMesajContact('Completează toate câmpurile!', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/contact-messages`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fullName, phone, email, subject, message })
+                });
+
+                if (response.ok) {
+                    afiseazaMesajContact('Mesajul a fost trimis. Te vom contacta în cel mai scurt timp.', 'success');
+                    document.querySelector('input[placeholder="Numele tău complet"]').value = '';
+                    document.querySelector('input[placeholder="Numărul de telefon"]').value = '';
+                    document.querySelector('input[placeholder="Adresa de email"]').value = '';
+                    document.querySelector('select').value = '';
+                    document.querySelector('textarea').value = '';
+                } else {
+                    const errorText = await response.text();
+                    console.log('Status:', response.status);
+                    console.log('Răspuns backend:', errorText);
+                    afiseazaMesajContact(`Eroare la trimiterea mesajului (status ${response.status})`, 'error');
+                }
+                } catch (error) {
+                    console.error('Eroare fetch:', error);
+                    afiseazaMesajContact('Serverul nu răspunde. Încearcă mai târziu.', 'error');
+                }
+            } 
+        //afiseaza mesaj pentru formularul de contact
+            function afiseazaMesajContact(text, tip) {
+                const msg = document.getElementById('contactMessage');
+                msg.textContent = text;
+                msg.className = `message ${tip}`;
+                msg.style.display = 'block';
+
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                }, 4000);
+            }
+                                
+    </script>
+
+</body>
+</html>

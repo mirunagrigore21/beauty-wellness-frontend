@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Client | Beauty & Wellness</title>
+    <link rel="icon" type="image/png" href="poze/icon2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --roz: #F8B4C8;
+            --roz-deschis: #FDE8F0;
+            --auriu: #C9A84C;
+            --auriu-deschis: #F5E6C8;
+            --alb: #FFFFFF;
+            --gri: #666666;
+            --negru: #333333;
+        }
+
+        body { font-family: 'Lato', sans-serif; background: #f8f9fa; color: var(--negru); }
+
+        .sidebar {
+            position: fixed; left: 0; top: 0; width: 260px; height: 100vh;
+            background: white; box-shadow: 2px 0 20px rgba(0,0,0,0.08);
+            display: flex; flex-direction: column; z-index: 100;
+        }
+
+        .sidebar-logo { padding: 25px 20px; border-bottom: 1px solid var(--roz-deschis); text-align: center; }
+        .sidebar-logo img { height: 55px; }
+
+        .sidebar-user {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--roz-deschis), var(--auriu-deschis));
+            text-align: center; border-bottom: 1px solid var(--roz);
+        }
+
+        .user-avatar {
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, var(--roz), var(--auriu));
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 24px; margin: 0 auto 10px;
+        }
+
+        .sidebar-user h4 { font-family: 'Playfair Display', serif; font-size: 16px; margin-bottom: 4px; }
+        .sidebar-user p { font-size: 12px; color: var(--gri); }
+
+        .sidebar-menu { flex: 1; padding: 20px 0; overflow-y: auto; }
+
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 20px; cursor: pointer; transition: all 0.3s;
+            font-size: 14px; color: var(--gri); border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover { background: var(--roz-deschis); color: var(--auriu); border-left-color: var(--auriu); }
+        .menu-item.active { background: var(--roz-deschis); color: var(--auriu); border-left-color: var(--auriu); font-weight: 700; }
+        .menu-icon { font-size: 18px; }
+
+        .sidebar-logout { padding: 20px; border-top: 1px solid var(--roz-deschis); }
+        .btn-logout {
+            width: 100%; padding: 12px; background: transparent;
+            border: 2px solid var(--roz); border-radius: 10px;
+            color: var(--gri); cursor: pointer; font-family: 'Lato', sans-serif;
+            font-size: 14px; transition: all 0.3s;
+        }
+        .btn-logout:hover { background: var(--roz); color: white; }
+
+        .main-content { margin-left: 260px; padding: 30px; min-height: 100vh; }
+
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .page-header h1 { font-family: 'Playfair Display', serif; font-size: 32px; }
+        .page-header h1 span {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+
+        .stat-card {
+            background: white; border-radius: 15px; padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px;
+        }
+
+        .stat-icon { width: 55px; height: 55px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .stat-icon.roz { background: var(--roz-deschis); }
+        .stat-icon.auriu { background: var(--auriu-deschis); }
+        .stat-icon.verde { background: #e8f5e9; }
+
+        .stat-info h3 { font-size: 28px; font-weight: 700; color: var(--negru); font-family: 'Playfair Display', serif; }
+        .stat-info p { font-size: 13px; color: var(--gri); }
+
+        /* card cupon */
+        .coupon-card {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            border-radius: 15px; padding: 25px; color: white;
+            margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 30px rgba(201,168,76,0.3);
+        }
+        .coupon-card h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 8px; }
+        .coupon-card p { opacity: 0.9; font-size: 14px; }
+
+        .coupon-code-display {
+            background: rgba(255,255,255,0.25); padding: 12px 24px;
+            border-radius: 30px; font-size: 20px; font-weight: 700;
+            letter-spacing: 3px; cursor: pointer; transition: all 0.3s;
+            border: 2px dashed rgba(255,255,255,0.6);
+            text-align: center;
+        }
+        .coupon-code-display:hover { background: rgba(255,255,255,0.4); }
+        .coupon-copy-hint { font-size: 11px; text-align: center; margin-top: 6px; opacity: 0.8; }
+
+        .table-container {
+            background: white; border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 25px;
+        }
+
+        .table-header {
+            padding: 20px 25px; border-bottom: 1px solid #f0f0f0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .table-header h3 { font-family: 'Playfair Display', serif; font-size: 18px; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            background: var(--roz-deschis); padding: 12px 20px; text-align: left;
+            font-size: 12px; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--gri);
+        }
+        td { padding: 15px 20px; border-bottom: 1px solid #f5f5f5; font-size: 14px; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #fafafa; }
+
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .badge-pending { background: #FFF3CD; color: #856404; }
+        .badge-confirmed { background: #D1ECF1; color: #0c5460; }
+        .badge-completed { background: #D4EDDA; color: #155724; }
+        .badge-cancelled { background: #F8D7DA; color: #721c24; }
+        .badge-noshow { background: #E2E3E5; color: #383d41; }
+        .badge-discount { background: #D4EDDA; color: #155724; font-size: 11px; padding: 3px 8px; }
+
+        .programare-form {
+            background: white; border-radius: 15px; padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-group label {
+            display: block; font-size: 13px; font-weight: 700;
+            color: var(--gri); margin-bottom: 8px;
+            letter-spacing: 0.5px; text-transform: uppercase;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%; padding: 12px 15px;
+            border: 1.5px solid #e0e0e0; border-radius: 10px;
+            font-size: 14px; font-family: 'Lato', sans-serif;
+            outline: none; transition: all 0.3s; background: white;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            border-color: var(--auriu);
+            box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+        }
+
+        .form-group textarea {
+            width: 100%; padding: 12px 15px;
+            border: 1.5px solid #e0e0e0; border-radius: 10px;
+            font-size: 14px; font-family: 'Lato', sans-serif;
+            outline: none; resize: none; height: 100px; transition: all 0.3s;
+        }
+        .form-group textarea:focus { border-color: var(--auriu); }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            color: white; padding: 15px 40px; border: none;
+            border-radius: 12px; font-size: 15px; font-family: 'Lato', sans-serif;
+            font-weight: 700; cursor: pointer; transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(201,168,76,0.3);
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(201,168,76,0.4); }
+
+        .message {
+            padding: 12px 15px; border-radius: 10px; font-size: 14px;
+            margin-bottom: 20px; display: none;
+        }
+        .message.error { background: #FFE5E5; color: #e74c3c; border: 1px solid #ffcccc; }
+        .message.success { background: #E5FFE5; color: #27ae60; border: 1px solid #ccffcc; }
+
+        /* sectiunea cupon in formularul de programare */
+        .coupon-section-form {
+            background: linear-gradient(135deg, #f0fff4, #e8f5e9);
+            border: 2px solid #27ae60;
+            border-radius: 12px; padding: 20px;
+            margin-bottom: 20px; display: none;
+        }
+
+        .coupon-section-form h4 {
+            color: #155724; font-size: 16px; margin-bottom: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .coupon-input-row {
+            display: flex; gap: 10px; align-items: center;
+        }
+
+        .coupon-input-row input {
+            flex: 1; padding: 10px 15px;
+            border: 1.5px solid #27ae60; border-radius: 8px;
+            font-size: 14px; font-family: 'Lato', sans-serif;
+            outline: none; letter-spacing: 2px; font-weight: 700;
+        }
+
+        .btn-aplica-cupon {
+            background: #27ae60; color: white; border: none;
+            padding: 10px 20px; border-radius: 8px;
+            cursor: pointer; font-family: 'Lato', sans-serif;
+            font-weight: 700; font-size: 14px; transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .btn-aplica-cupon:hover { background: #1e8449; }
+
+        .btn-sterge-cupon {
+            background: #ff6b6b; color: white; border: none;
+            padding: 10px 15px; border-radius: 8px;
+            cursor: pointer; font-size: 13px; transition: all 0.3s;
+        }
+        .btn-sterge-cupon:hover { background: #e53e3e; }
+
+        .cupon-aplicat {
+            background: #d4edda; border-radius: 8px;
+            padding: 10px 15px; margin-top: 10px;
+            color: #155724; font-size: 14px; display: none;
+        }
+
+        /* bara de progres loialitate */
+        .loyalty-progress {
+            background: white; border-radius: 15px; padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 25px;
+        }
+        .loyalty-progress h3 { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 15px; }
+
+        .progress-bar { background: #f0f0f0; border-radius: 10px; height: 12px; overflow: hidden; margin-bottom: 8px; }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--roz), var(--auriu));
+            border-radius: 10px; transition: width 0.5s ease;
+        }
+        .progress-text { font-size: 13px; color: var(--gri); text-align: right; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="poze/logo.png" alt="Beauty & Wellness">
+        </div>
+        <div class="sidebar-user">
+            <div class="user-avatar">👤</div>
+            <h4 id="userName">Se încarcă...</h4>
+            <p id="userEmail"></p>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item active" onclick="showSection('acasa', this)">
+                <span class="menu-icon">🏠</span> Acasă
+            </div>
+            <div class="menu-item" onclick="showSection('programare-noua', this)">
+                <span class="menu-icon">📅</span> Programare Nouă
+            </div>
+            <div class="menu-item" onclick="showSection('programarile-mele', this)">
+                <span class="menu-icon">📋</span> Programările Mele
+            </div>
+            <div class="menu-item" onclick="showSection('loialitate', this)">
+                <span class="menu-icon">💝</span> Puncte Loialitate
+            </div>
+        </div>
+        <div class="sidebar-logout">
+            <button class="btn-logout" onclick="logout()">🚪 Deconectare</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <!-- ACASA -->
+        <div class="section active" id="section-acasa">
+            <div class="page-header">
+                <h1>Bună ziua, <span id="userNameHeader">...</span>! 👋</h1>
+            </div>
+            <!-- mesaj avertisment sau blocare -->
+            <div id="warningMessage" style="display:none; background: #FFE5E5; 
+                border: 1px solid #ffcccc; border-radius: 12px; 
+                padding: 15px 20px; margin-bottom: 25px; color: #c0392b; font-size: 14px;">
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon roz">📅</div>
+                    <div class="stat-info"><h3 id="totalProgramari">0</h3><p>Programări Total</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon auriu">⏳</div>
+                    <div class="stat-info"><h3 id="programariViitoare">0</h3><p>Programări Viitoare</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon verde">✅</div>
+                    <div class="stat-info"><h3 id="programariFinalizate">0</h3><p>Programări Finalizate</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon roz">💝</div>
+                    <div class="stat-info"><h3 id="puncteLoialitate">0</h3><p>Puncte Loialitate</p></div>
+                </div>
+            </div>
+
+            <!-- cupon activ acasa -->
+            <div id="couponSection" style="display:none">
+                <div class="coupon-card">
+                    <div>
+                        <h3>🎉 Ai un cupon de reducere!</h3>
+                        <p>Folosește codul la următoarea programare pentru o reducere de <strong>20 lei</strong></p>
+                        <p style="margin-top: 8px; font-size: 13px; opacity: 0.85;">
+                            💡 Mergi la <strong>Programare Nouă</strong> și aplică cuponul!
+                        </p>
+                    </div>
+                    <div>
+                        <div class="coupon-code-display" onclick="copiazaCupon('couponCodeAcasa')" id="couponCodeAcasa">BW-XXX</div>
+                        <p class="coupon-copy-hint">Click pentru a copia</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ultimele programari -->
+            <div class="table-container">
+                <div class="table-header"><h3>Ultimele Programări</h3></div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Serviciu</th><th>Angajat</th><th>Data și Ora</th><th>Preț</th><th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ultimeleProgramari">
+                        <tr><td colspan="5" style="text-align:center; color: var(--gri); padding: 30px;">Se încarcă...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PROGRAMARE NOUA -->
+        <div class="section" id="section-programare-noua">
+            <div class="page-header">
+                <h1>Programare <span>Nouă</span></h1>
+            </div>
+
+            <div class="programare-form">
+                <div class="message" id="programareMessage"></div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Categorie Serviciu</label>
+                        <select id="categorieSelect" onchange="filtreazaServicii()">
+                            <option value="">-- Alege categoria --</option>
+                            <option value="HAIR">💇‍♀️ Coafură</option>
+                            <option value="NAILS">💅 Unghii</option>
+                            <option value="MAKEUP">💄 Machiaj</option>
+                            <option value="SKIN_CARE">✨ Îngrijire Ten</option>
+                            <option value="EYEBROWS">👁️ Sprâncene</option>
+                            <option value="EYELASHES">👀 Gene</option>
+                            <option value="MASSAGE">🌿 Masaj</option>
+                            <option value="SPA">🛁 Spa</option>
+                            <option value="AROMATHERAPY">🌸 Aromaterapie</option>
+                            <option value="REFLEXOLOGY">🦶 Reflexologie</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Serviciu</label>
+                        <select id="serviciuSelect">
+                            <option value="">-- Alege mai întâi categoria --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Specialist</label>
+                        <select id="angajatSelect">
+                            <option value="">-- Alege mai întâi serviciul --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Data</label>
+                        <input type="date" id="dataSelect">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ora</label>
+                        <select id="oraSelect">
+                            <option value="">-- Alege mai întâi data --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Note (opțional)</label>
+                    <textarea id="noteInput" placeholder="Orice detalii speciale..."></textarea>
+                </div>
+
+                <!-- sectiunea cupon -->
+                <div class="coupon-section-form" id="couponSectionForm">
+                    <h4>🎟️ Aplică Cupon de Reducere</h4>
+                    <p style="font-size: 13px; color: #155724; margin-bottom: 12px;">
+                        Ai un cupon activ! Introdu codul pentru a beneficia de reducerea de <strong>20 lei</strong>.
+                    </p>
+                    <div class="coupon-input-row">
+                        <input type="text" id="couponInput" placeholder="Ex: BW-1-123456" maxlength="30">
+                        <button class="btn-aplica-cupon" onclick="aplicaCupon()">✅ Aplică</button>
+                        <button class="btn-sterge-cupon" onclick="stergeCupon()">✕</button>
+                    </div>
+                    <div class="cupon-aplicat" id="cuponAplicat">
+                        ✅ Cupon aplicat! Vei beneficia de o reducere de <strong>20 lei</strong> la această programare.
+                    </div>
+                </div>
+
+                <button class="btn-submit" onclick="salveazaProgramare()">
+                    📅 Confirmă Programarea
+                </button>
+            </div>
+        </div>
+
+        <!-- PROGRAMARILE MELE -->
+        <div class="section" id="section-programarile-mele">
+            <div class="page-header">
+                <h1>Programările <span>Mele</span></h1>
+            </div>
+            <div class="table-container">
+                <div class="table-header"><h3>Toate Programările</h3></div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Serviciu</th><th>Angajat</th><th>Data și Ora</th>
+                            <th>Preț</th><th>Status</th><th>Acțiuni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="toateProgramarile">
+                        <tr><td colspan="6" style="text-align:center; color: var(--gri); padding: 30px;">Se încarcă...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- LOIALITATE -->
+        <div class="section" id="section-loialitate">
+            <div class="page-header">
+                <h1>Puncte <span>Loialitate</span></h1>
+            </div>
+
+            <div class="loyalty-progress">
+                <h3>💝 Progresul Tău</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progressText">0 / 5 puncte</div>
+                <p style="color: var(--gri); font-size: 14px; margin-top: 10px;">
+                    La 5 puncte primești un cupon de reducere de <strong>20 lei</strong>!
+                </p>
+            </div>
+
+            <!-- cupon activ loialitate -->
+            <div id="couponSectionLoialitate" style="display:none">
+                <div class="coupon-card">
+                    <div>
+                        <h3>🎉 Felicitări! Ai un cupon activ!</h3>
+                        <p>Prezintă codul la salon pentru o reducere de <strong>20 lei</strong></p>
+                        <p style="margin-top: 8px; font-size: 13px; opacity: 0.85;">
+                            Aplică-l la următoarea programare din secțiunea <strong>Programare Nouă</strong>
+                        </p>
+                    </div>
+                    <div>
+                        <div class="coupon-code-display" onclick="copiazaCupon('couponCodeLoialitate')" id="couponCodeLoialitate">BW-XXX</div>
+                        <p class="coupon-copy-hint">Click pentru a copia</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container" style="padding: 25px;">
+                <h3 style="font-family: 'Playfair Display', serif; margin-bottom: 20px;">Cum funcționează?</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 40px; margin-bottom: 10px;">📅</div>
+                        <h4>1. Fă o programare</h4>
+                        <p style="color: var(--gri); font-size: 13px; margin-top: 5px;">Programează-te la orice serviciu</p>
+                    </div>
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 40px; margin-bottom: 10px;">✅</div>
+                        <h4>2. Finalizează serviciul</h4>
+                        <p style="color: var(--gri); font-size: 13px; margin-top: 5px;">Primești 1 punct după fiecare vizită</p>
+                    </div>
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 40px; margin-bottom: 10px;">🎁</div>
+                        <h4>3. Primești cuponul</h4>
+                        <p style="color: var(--gri); font-size: 13px; margin-top: 5px;">La 5 puncte primești 20 lei reducere</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080';
+        let clientId = null;
+        let toateServiciile = [];
+        let couponClientului = null; // stocheaza cuponul clientului
+
+        function verificaAutentificare() {
+            const token = localStorage.getItem('token');
+            const role = localStorage.getItem('userRole');
+            if (!token || role !== 'Client') {
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        function getHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            };
+        }
+
+        function showSection(sectiune, element) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.getElementById(`section-${sectiune}`).classList.add('active');
+            element.classList.add('active');
+        }
+
+        function formateazaData(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('ro-RO', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        function getBadge(status) {
+            const badges = {
+                'PENDING': '<span class="badge badge-pending">În așteptare</span>',
+                'CONFIRMED': '<span class="badge badge-confirmed">Confirmată</span>',
+                'COMPLETED': '<span class="badge badge-completed">Finalizată</span>',
+                'CANCELLED_BY_CLIENT': '<span class="badge badge-cancelled">Anulată de tine</span>',
+                'CANCELLED_BY_SALON': '<span class="badge badge-cancelled">Anulată de salon</span>',
+                'NO_SHOW': '<span class="badge badge-noshow">Neprezentare</span>'
+            };
+            return badges[status] || status;
+        }
+
+        //afiseaza pretul cu sau fara reducere
+        function afiseazaPret(p) {
+            const pret = p.service?.price || 0;
+            const discount = p.discount || 0;
+            if (discount > 0) {
+                return `
+                    <span style="text-decoration: line-through; color: var(--gri); font-size: 12px;">${pret} RON</span>
+                    <br><strong style="color: #27ae60;">${(pret - discount).toFixed(0)} RON</strong>
+                    <br><span class="badge badge-discount">🎟️ -${discount} RON</span>
+                `;
+            }
+            return `<strong>${pret} RON</strong>`;
+        }
+
+        async function incarcaDateClient() {
+            const email = localStorage.getItem('userEmail');
+            try {
+                const response = await fetch(`${API_URL}/api/clients/email/${email}`, {
+                    headers: getHeaders()
+                });
+                if (response.ok) {
+                    const client = await response.json();
+                    console.log('warning:', client.warningMessage);
+                    console.log('blocked:', client.blocked);
+                    clientId = client.id;
+
+                    const name = localStorage.getItem('userName');
+                    document.getElementById('userName').textContent = name;
+                    document.getElementById('userEmail').textContent = email;
+                    document.getElementById('userNameHeader').textContent = name.split(' ')[0];
+
+                    const puncte = client.loyaltyPoints || 0;
+                    document.getElementById('puncteLoialitate').textContent = puncte;
+                    const progres = Math.min((puncte / 5) * 100, 100);
+                    document.getElementById('progressFill').style.width = `${progres}%`;
+                    document.getElementById('progressText').textContent = `${puncte} / 5 puncte`;
+
+                    //verifica daca clientul e blocat are avertisment
+                    const warningBox = document.getElementById('warningMessage');
+
+                  if (client.blocked) {
+                        warningBox.style.display = 'block';
+                        warningBox.innerHTML = `
+                            <strong>🚫 Contul tău este blocat!</strong><br>
+                            ${client.blockedReason || 'Contactează salonul pentru deblocare.'}
+                        `;
+
+                        //blocheaza programarea
+                        const btnProgramare = document.querySelector('.menu-item[onclick*="programare"]');
+                        if (btnProgramare) {
+                            btnProgramare.style.pointerEvents = 'none';
+                            btnProgramare.style.opacity = '0.5';
+                        }
+
+                    } else if (client.warningMessage && client.warningMessage.trim() !== '') {
+                        warningBox.style.display = 'block';
+                        warningBox.innerHTML = `
+                            <strong>⚠️ Atenție!</strong><br>
+                            ${client.warningMessage}
+                        `;
+
+                    } else {
+                        warningBox.style.display = 'none';
+                    }
+                    // seteaza cuponul
+                    if (client.hasCoupon && client.couponCode) {
+                        couponClientului = client.couponCode;
+
+                        // afiseaza pe pagina acasa
+                        document.getElementById('couponSection').style.display = 'block';
+                        document.getElementById('couponCodeAcasa').textContent = client.couponCode;
+
+                        // afiseaza pe pagina loialitate
+                        document.getElementById('couponSectionLoialitate').style.display = 'block';
+                        document.getElementById('couponCodeLoialitate').textContent = client.couponCode;
+
+                        // afiseaza sectiunea cupon in formularul de programare
+                        document.getElementById('couponSectionForm').style.display = 'block';
+                        // pre-completeaza codul
+                        document.getElementById('couponInput').value = client.couponCode;
+                    }
+
+                    incarcaProgramari();
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+            }
+        }
+
+        //aplica cuponul 
+        function aplicaCupon() {
+            const codIntroduc = document.getElementById('couponInput').value.trim();
+            if (!codIntroduc) {
+                alert('Introdu codul cuponului!');
+                return;
+            }
+            if (couponClientului && codIntroduc === couponClientului) {
+                document.getElementById('cuponAplicat').style.display = 'block';
+                document.getElementById('couponInput').style.borderColor = '#27ae60';
+                document.getElementById('couponInput').readOnly = true;
+            } else {
+                alert('Codul cuponului este incorect! Verifică codul din secțiunea Puncte Loialitate.');
+                document.getElementById('couponInput').style.borderColor = '#e74c3c';
+            }
+        }
+
+        //sterge cuponul 
+        function stergeCupon() {
+            document.getElementById('couponInput').value = '';
+            document.getElementById('couponInput').readOnly = false;
+            document.getElementById('couponInput').style.borderColor = '#27ae60';
+            document.getElementById('cuponAplicat').style.display = 'none';
+        }
+
+        async function incarcaProgramari() {
+            if (!clientId) return;
+            try {
+                const response = await fetch(`${API_URL}/api/appointments/client/${clientId}`, {
+                    headers: getHeaders()
+                });
+                if (response.ok) {
+                    const programari = await response.json();
+
+                    document.getElementById('totalProgramari').textContent = programari.length;
+                    document.getElementById('programariViitoare').textContent =
+                        programari.filter(p => p.status === 'PENDING' || p.status === 'CONFIRMED').length;
+                    document.getElementById('programariFinalizate').textContent =
+                        programari.filter(p => p.status === 'COMPLETED').length;
+
+                    //ultimele 5 programari
+                    const ultimele = programari.slice(-5).reverse();
+                    document.getElementById('ultimeleProgramari').innerHTML = ultimele.length > 0
+                        ? ultimele.map(p => `
+                            <tr>
+                                <td><strong>${p.service?.name || 'N/A'}</strong></td>
+                                <td>${p.employee?.firstName || ''} ${p.employee?.lastName || ''}</td>
+                                <td>${formateazaData(p.appointmentDateTime)}</td>
+                                <td>${afiseazaPret(p)}</td>
+                                <td>${getBadge(p.status)}</td>
+                            </tr>`).join('')
+                        : '<tr><td colspan="5" style="text-align:center; color: var(--gri); padding: 30px;">Nu ai programări încă</td></tr>';
+
+                    //toate programarile
+                    document.getElementById('toateProgramarile').innerHTML = programari.length > 0
+                        ? [...programari].reverse().map(p => `
+                            <tr>
+                                <td><strong>${p.service?.name || 'N/A'}</strong></td>
+                                <td>${p.employee?.firstName || ''} ${p.employee?.lastName || ''}</td>
+                                <td>${formateazaData(p.appointmentDateTime)}</td>
+                                <td>${afiseazaPret(p)}</td>
+                                <td>${getBadge(p.status)}</td>
+                                <td>
+                                    ${p.status === 'PENDING' || p.status === 'CONFIRMED'
+                                        ? `<button onclick="anuleazaProgramare(${p.id})"
+                                            style="background: #ff6b6b; color: white; border: none;
+                                            padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 12px;">
+                                            Anulează</button>`
+                                        : '-'}
+                                </td>
+                            </tr>`).join('')
+                        : '<tr><td colspan="6" style="text-align:center; color: var(--gri); padding: 30px;">Nu ai programări încă</td></tr>';
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+            }
+        }
+
+        async function incarcaToateServiciile() {
+            try {
+                const response = await fetch(`${API_URL}/api/salon-procedures`);
+                toateServiciile = await response.json();
+            } catch (error) {
+                console.error('Eroare:', error);
+            }
+        }
+
+        function filtreazaServicii() {
+            const categorie = document.getElementById('categorieSelect').value;
+            const serviciuSelect = document.getElementById('serviciuSelect');
+            serviciuSelect.innerHTML = '<option value="">-- Alege serviciul --</option>';
+            document.getElementById('angajatSelect').innerHTML = '<option value="">-- Alege mai întâi serviciul --</option>';
+            document.getElementById('oraSelect').innerHTML = '<option value="">-- Alege mai întâi data --</option>';
+            if (!categorie) return;
+            const filtrate = toateServiciile.filter(s => s.category === categorie);
+            filtrate.forEach(s => {
+                serviciuSelect.innerHTML += `<option value="${s.id}">${s.name} — ${s.price} RON (${s.durationMinutes} min)</option>`;
+            });
+            serviciuSelect.onchange = incarcaAngajati;
+        }
+
+        async function incarcaAngajati() {
+            const serviciuId = document.getElementById('serviciuSelect').value;
+            const angajatSelect = document.getElementById('angajatSelect');
+            angajatSelect.innerHTML = '<option value="">Se încarcă...</option>';
+            document.getElementById('oraSelect').innerHTML = '<option value="">-- Alege mai întâi data --</option>';
+            if (!serviciuId) return;
+            const serviciuAles = toateServiciile.find(s => s.id == serviciuId);
+            if (!serviciuAles) return;
+            try {
+                const response = await fetch(`${API_URL}/api/employees/by-category/${serviciuAles.category}`, {
+                    headers: getHeaders()
+                });
+                if (response.ok) {
+                    const angajati = await response.json();
+                    angajatSelect.innerHTML = '<option value="">-- Alege specialistul --</option>';
+                    angajati.forEach(a => {
+                        angajatSelect.innerHTML += `<option value="${a.id}">${a.firstName} ${a.lastName}</option>`;
+                    });
+                    if (angajati.length === 0) {
+                        angajatSelect.innerHTML = '<option value="">Niciun specialist disponibil</option>';
+                    }
+                    angajatSelect.addEventListener('change', incarcaOreDisponibile);
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+            }
+        }
+
+        function setDataMinima() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            document.getElementById('dataSelect').min = `${yyyy}-${mm}-${dd}`;
+            document.getElementById('dataSelect').addEventListener('change', incarcaOreDisponibile);
+        }
+
+        async function incarcaOreDisponibile() {
+            const angajatId = document.getElementById('angajatSelect').value;
+            const data = document.getElementById('dataSelect').value;
+            const serviciuId = document.getElementById('serviciuSelect').value;
+            const oraSelect = document.getElementById('oraSelect');
+
+            if (!angajatId || !data || !serviciuId) {
+                oraSelect.innerHTML = '<option value="">-- Alege mai întâi angajatul și data --</option>';
+                return;
+            }
+
+            // verifica daca e duminica
+            const ziuaSaptamanii = new Date(`${data}T00:00:00`).getDay();
+            if (ziuaSaptamanii === 0) {
+                oraSelect.innerHTML = '<option value="">Salonul este închis duminică!</option>';
+                return;
+            }
+
+            const serviciu = toateServiciile.find(s => s.id == serviciuId);
+            const durata = serviciu?.durationMinutes || 60;
+
+            const oreDisponibile = [
+                '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+                '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
+                '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
+                '18:00', '18:30'
+            ];
+
+            oraSelect.innerHTML = '<option value="">Se verifică disponibilitatea...</option>';
+
+            let programariZi = [];
+            try {
+                const response = await fetch(`${API_URL}/api/appointments/employee/${angajatId}`, {
+                    headers: getHeaders()
+                });
+                if (response.ok) {
+                    const toate = await response.json();
+                    programariZi = toate.filter(p => {
+                        const dataP = new Date(p.appointmentDateTime).toISOString().slice(0, 10);
+                        return dataP === data &&
+                            p.status !== 'CANCELLED_BY_CLIENT' &&
+                            p.status !== 'CANCELLED_BY_SALON' &&
+                            p.status !== 'NO_SHOW';
+                    });
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+            }
+
+            const oreLibere = [];
+            const acum = new Date();
+            const azi = `${acum.getFullYear()}-${String(acum.getMonth() + 1).padStart(2, '0')}-${String(acum.getDate()).padStart(2, '0')}`;
+            const esteAzi = data === azi;
+
+            for (const ora of oreDisponibile) {
+                const startMs = new Date(`${data}T${ora}:00`).getTime();
+                const endMs = startMs + durata * 60 * 1000;
+                const end = new Date(endMs);
+                const oraEndMinute = end.getHours() * 60 + end.getMinutes();
+
+                // nu lasa programari care depasesc ora 19:00
+                if (oraEndMinute > 19 * 60) continue;
+
+                // blocheaza orele deja trecute in ziua curenta
+                if (esteAzi && startMs <= acum.getTime()) continue;
+
+                let disponibil = true;
+                for (const prog of programariZi) {
+                    const progStart = new Date(prog.appointmentDateTime).getTime();
+                    const progDurata = prog.service?.durationMinutes || 60;
+                    const progEnd = progStart + progDurata * 60 * 1000;
+
+                    if (startMs < progEnd && endMs > progStart) {
+                        disponibil = false;
+                        break;
+                    }
+                }
+
+                if (disponibil) oreLibere.push(ora);
+            }
+
+            if (oreLibere.length === 0) {
+                oraSelect.innerHTML = '<option value="">Nu sunt ore disponibile în această zi</option>';
+            } else {
+                oraSelect.innerHTML = '<option value="">-- Alege ora --</option>';
+                oreLibere.forEach(ora => {
+                    oraSelect.innerHTML += `<option value="${ora}">${ora}</option>`;
+                });
+            }
+        }
+
+        async function salveazaProgramare() {
+            const serviciuId = document.getElementById('serviciuSelect').value;
+            const angajatId = document.getElementById('angajatSelect').value;
+            const data = document.getElementById('dataSelect').value;
+            const ora = document.getElementById('oraSelect').value;
+            const note = document.getElementById('noteInput').value;
+
+            if (!serviciuId || !angajatId || !data || !ora) {
+                afiseazaMessage('programareMessage', 'Completează toate câmpurile obligatorii!', 'error');
+                return;
+            }
+            const ziuaSaptamanii = new Date(`${data}T00:00:00`).getDay();
+            if (ziuaSaptamanii === 0) {
+                afiseazaMessage('programareMessage', 'Salonul este închis duminică. Alege altă zi!', 'error');
+                return;
+            }
+
+            // verifica daca cuponul a fost aplicat
+            const cuponAplicat = document.getElementById('cuponAplicat').style.display === 'block';
+            const codCupon = document.getElementById('couponInput').value.trim();
+
+            // construieste nota finala
+            let noteFinala = note || null;
+            if (cuponAplicat && codCupon) {
+                noteFinala = `CUPON: ${codCupon} (-20 RON)${note ? ' | ' + note : ''}`;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/appointments`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({
+                        clientId: clientId,
+                        employeeId: parseInt(angajatId),
+                        serviceId: parseInt(serviciuId),
+                        appointmentDateTime: `${data}T${ora}:00`,
+                        notes: noteFinala
+                    })
+                });
+
+                if (response.ok) {
+                    afiseazaMessage('programareMessage', '🎉 Programare creată cu succes!', 'success');
+
+                    //reseteaza formularul
+                    document.getElementById('categorieSelect').value = '';
+                    document.getElementById('serviciuSelect').innerHTML = '<option value="">-- Alege mai întâi categoria --</option>';
+                    document.getElementById('angajatSelect').innerHTML = '<option value="">-- Alege mai întâi serviciul --</option>';
+                    document.getElementById('dataSelect').value = '';
+                    document.getElementById('oraSelect').innerHTML = '<option value="">-- Alege mai întâi data --</option>';
+                    document.getElementById('noteInput').value = '';
+
+                    //daca s-a folosit cuponul - ascunde sectiunea si reincarca datele
+                    if (cuponAplicat) {
+                        couponClientului = null;
+                        document.getElementById('couponSectionForm').style.display = 'none';
+                        document.getElementById('couponSection').style.display = 'none';
+                        document.getElementById('couponSectionLoialitate').style.display = 'none';
+                        document.getElementById('cuponAplicat').style.display = 'none';
+                        document.getElementById('couponInput').value = '';
+                        document.getElementById('couponInput').readOnly = false;
+                    }
+
+                    setTimeout(() => incarcaProgramari(), 1000);
+                } else {
+                   afiseazaMessage(
+                      
+                        'programareMessage',
+                        err.message || 'Nu s-a putut crea programarea. Te rugăm să încerci din nou.',
+                        'error'
+                    );
+                }
+            } catch (error) {
+                   afiseazaMessage(
+                        'programareMessage',
+                        'Eroare de conexiune. Te rugăm să încerci din nou mai târziu.',
+                        'error'
+                    );
+            }
+        }
+
+        async function anuleazaProgramare(id) {
+            if (!confirm('Ești sigură că dorești să anulezi această programare?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/api/appointments/${id}/cancel-client`, {
+                    method: 'PATCH',
+                    headers: getHeaders()
+                });
+
+                if (response.ok) {
+                    alert('Programarea a fost anulată cu succes.');
+                    incarcaProgramari();
+                } else {
+                    alert('Nu s-a putut anula programarea. Încearcă din nou.');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                alert('Eroare de conexiune. Verifică internetul și încearcă din nou.');
+            }
+        }
+
+        function copiazaCupon(elementId) {
+            const cod = document.getElementById(elementId).textContent.trim();
+            navigator.clipboard.writeText(cod);
+            alert(`Codul ${cod} a fost copiat în clipboard!`);
+        }
+
+        function afiseazaMessage(id, text, tip) {
+            const msg = document.getElementById(id);
+            msg.textContent = text;
+            msg.className = `message ${tip}`;
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 4000);
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        if (verificaAutentificare()) {
+            incarcaDateClient();
+            incarcaToateServiciile();
+            setDataMinima();
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin | Beauty & Wellness</title>
+    <link rel="icon" type="image/png" href="poze/icon2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --roz: #F8B4C8;
+            --roz-deschis: #FDE8F0;
+            --auriu: #C9A84C;
+            --auriu-deschis: #F5E6C8;
+            --alb: #FFFFFF;
+            --gri: #666666;
+            --negru: #333333;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: #f8f9fa;
+            color: var(--negru);
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: white;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            padding: 25px 20px;
+            border-bottom: 1px solid var(--roz-deschis);
+            text-align: center;
+        }
+
+        .sidebar-logo img { height: 55px; }
+
+        .sidebar-user {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--roz-deschis), var(--auriu-deschis));
+            text-align: center;
+            border-bottom: 1px solid var(--roz);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 10px;
+        }
+
+        .sidebar-user h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-user p { font-size: 12px; color: var(--gri); }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            color: var(--gri);
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: var(--roz-deschis);
+            color: var(--auriu);
+            border-left-color: var(--auriu);
+        }
+
+        .menu-item.active {
+            background: var(--roz-deschis);
+            color: var(--auriu);
+            border-left-color: var(--auriu);
+            font-weight: 700;
+        }
+
+        .menu-icon { font-size: 18px; }
+
+        .sidebar-logout {
+            padding: 20px;
+            border-top: 1px solid var(--roz-deschis);
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 2px solid var(--roz);
+            border-radius: 10px;
+            color: var(--gri);
+            cursor: pointer;
+            font-family: 'Lato', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover { background: var(--roz); color: white; }
+
+        /* CONTINUT PRINCIPAL */
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+        }
+
+        .page-header h1 span {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section { display: none; }
+        .section.active { display: block; }
+
+        /* SECTIUNI STATISTICI  */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stat-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.roz { background: var(--roz-deschis); }
+        .stat-icon.auriu { background: var(--auriu-deschis); }
+        .stat-icon.verde { background: #e8f5e9; }
+        .stat-icon.albastru { background: #e3f2fd; }
+
+        .stat-info h3 {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-info p { font-size: 13px; color: var(--gri); }
+
+        /* TABEL */
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .table-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        th {
+            background: var(--roz-deschis);
+            padding: 12px 20px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--gri);
+        }
+
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 14px;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #fafafa; }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-pending { background: #FFF3CD; color: #856404; }
+        .badge-confirmed { background: #D1ECF1; color: #0c5460; }
+        .badge-completed { background: #D4EDDA; color: #155724; }
+        .badge-cancelled { background: #F8D7DA; color: #721c24; }
+        .badge-noshow { background: #E2E3E5; color: #383d41; }
+
+        /* butoane actiuni */
+        .btn-action {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-right: 5px;
+        }
+
+        .btn-confirm { background: #D1ECF1; color: #0c5460; }
+        .btn-confirm:hover { background: #0c5460; color: white; }
+        .btn-complete { background: #D4EDDA; color: #155724; }
+        .btn-complete:hover { background: #155724; color: white; }
+        .btn-cancel { background: #F8D7DA; color: #721c24; }
+        .btn-cancel:hover { background: #721c24; color: white; }
+        .btn-noshow { background: #E2E3E5; color: #383d41; }
+        .btn-noshow:hover { background: #383d41; color: white; }
+        .btn-delete { background: #ffebee; color: #c62828; }
+        .btn-delete:hover { background: #c62828; color: white; }
+
+        /* butonul principal */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); }
+
+        /* graficul statistici */
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .chart-container h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        /* grafic*/
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            height: 200px;
+            padding: 10px 0;
+        }
+
+        .bar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            height: 100%;
+            justify-content: flex-end;
+        }
+
+        .bar {
+            width: 100%;
+            background: linear-gradient(to top, var(--auriu), #e8c05a);
+            border-radius: 5px 5px 0 0;
+            transition: height 0.5s ease;
+            min-height: 5px;
+        }
+
+        .bar-label {
+            font-size: 11px;
+            color: var(--gri);
+            text-align: center;
+        }
+
+        .bar-value {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--auriu);
+        }
+
+        /* mesaje */
+        .message {
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .message.error { background: #FFE5E5; color: #e74c3c; }
+        .message.success { background: #E5FFE5; color: #27ae60; }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR  -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <img src="poze/logo.png" alt="Beauty & Wellness">
+        </div>
+        <div class="sidebar-user">
+            <div class="user-avatar">👑</div>
+            <h4 id="adminName">Admin</h4>
+            <p id="adminEmail"></p>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item active" onclick="showSection('statistici', this)">
+                <span class="menu-icon">📊</span> Statistici
+            </div>
+            <div class="menu-item" onclick="showSection('programari', this)">
+                <span class="menu-icon">📅</span> Programări
+            </div>
+            <div class="menu-item" onclick="showSection('angajati', this)">
+                <span class="menu-icon">👥</span> Angajați
+            </div>
+            <div class="menu-item" onclick="showSection('clienti', this)">
+                <span class="menu-icon">👤</span> Clienți
+            </div>
+            <div class="menu-item" onclick="showSection('servicii', this)">
+                <span class="menu-icon">💅</span> Servicii
+            </div>
+            <div class="menu-item" onclick="showSection('mesaje-contact', this)">
+                <span class="menu-icon">✉️</span> Mesaje Contact
+            </div>
+        </div>
+        <div class="sidebar-logout">
+            <button class="btn-logout" onclick="logout()">🚪 Deconectare</button>
+        </div>
+    </div>
+
+    <!--  CONTINUT PRINCIPAL -->
+    <div class="main-content">
+
+        <!--STATISTICI  -->
+        <div class="section active" id="section-statistici">
+            <div class="page-header">
+                <h1>Dashboard <span>Admin</span></h1>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon auriu">📅</div>
+                    <div class="stat-info">
+                        <h3 id="statTotal">0</h3>
+                        <p>Programări Luna Aceasta</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon verde">💰</div>
+                    <div class="stat-info">
+                        <h3 id="statVenituri">0</h3>
+                        <p>Venituri Totale (RON)</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon roz">❌</div>
+                    <div class="stat-info">
+                        <h3 id="statNoShow">0</h3>
+                        <p>No-Show-uri</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon albastru">👤</div>
+                    <div class="stat-info">
+                        <h3 id="statClientiNoi">0</h3>
+                        <p>Clienți Noi</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- grafic programari pe zile -->
+            <div class="chart-container">
+                <h3>📈 Programări pe Zile — <span id="lunaAnul"></span></h3>
+                <div class="bar-chart" id="barChart"></div>
+            </div>
+
+            <!-- top servicii si angajati -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>🏆 Top Serviciu</h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <p style="font-size: 18px; font-family: 'Playfair Display', serif;" id="topServiciu">—</p>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>⭐ Top Angajat</h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <p style="font-size: 18px; font-family: 'Playfair Display', serif;" id="topAngajat">—</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROGRAMARI -->
+        <div class="section" id="section-programari">
+            <div class="page-header">
+                <h1>Toate <span>Programările</span></h1>
+            </div>
+
+            <!-- filtre status -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                <button class="btn-primary" onclick="filtreazaProgramari('ALL')">Toate</button>
+                <button class="btn-action btn-pending" onclick="filtreazaProgramari('PENDING')" style="background: #FFF3CD; color: #856404; padding: 10px 20px;">În așteptare</button>
+                <button class="btn-action" onclick="filtreazaProgramari('CONFIRMED')" style="background: #D1ECF1; color: #0c5460; padding: 10px 20px;">Confirmate</button>
+                <button class="btn-action" onclick="filtreazaProgramari('COMPLETED')" style="background: #D4EDDA; color: #155724; padding: 10px 20px;">Finalizate</button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Serviciu</th>
+                            <th>Angajat</th>
+                            <th>Data și Ora</th>
+                            <th>Preț</th>
+                            <th>Status</th>
+                            <th>Acțiuni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelProgramari">
+                        <tr><td colspan="7" style="text-align:center; padding: 30px; color: var(--gri);">Se încarcă...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ANGAJATI -->
+        <div class="section" id="section-angajati">
+            <div class="page-header">
+                <h1>Gestionare <span>Angajați</span></h1>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Lista Angajaților</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nume</th>
+                            <th>Email</th>
+                            <th>Specializare</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelAngajati">
+                        <tr><td colspan="4" style="text-align:center; padding: 30px; color: var(--gri);">Se încarcă...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!--CLIENTI -->
+        <div class="section" id="section-clienti">
+            <div class="page-header">
+                <h1>Gestionare <span>Clienți</span></h1>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nume</th>
+                            <th>Email</th>
+                            <th>Telefon</th>
+                            <th>Puncte</th>
+                            <th>No-Show</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelClienti">
+                        <tr><td colspan="6" style="text-align:center; padding: 30px; color: var(--gri);">Se încarcă...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SERVICII -->
+        <div class="section" id="section-servicii">
+            <div class="page-header">
+                <h1>Gestionare <span>Servicii</span></h1>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nume</th>
+                            <th>Categorie</th>
+                            <th>Durată</th>
+                            <th>Preț</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelServicii">
+                        <tr><td colspan="5" style="text-align:center; padding: 30px; color: var(--gri);">Se încarcă...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- MESAJE CONTACT  -->
+        <div class="section" id="section-mesaje-contact">
+            <div class="page-header">
+                <h1>Mesaje <span>Contact</span></h1>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Mesaje primite din formularul de contact</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nume</th>
+                            <th>Telefon</th>
+                            <th>Email</th>
+                            <th>Subiect</th>
+                            <th>Mesaj</th>
+                            <th>Status</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelMesajeContact">
+                        <tr>
+                            <td colspan="7" style="text-align:center; padding: 30px; color: var(--gri);">
+                                Se încarcă...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080';
+
+        // verifica autentificarea
+        function verificaAutentificare() {
+            const token = localStorage.getItem('token');
+            const role = localStorage.getItem('userRole');
+            if (!token || role !== 'Administrator') {
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // header cu token JWT
+        function getHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            };
+        }
+
+        // afiseaza sectiunea selectata
+        function showSection(sectiune, element) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.getElementById(`section-${sectiune}`).classList.add('active');
+            element.classList.add('active');
+
+            // incarca datele sectiunii
+           if (sectiune === 'programari') incarcaProgramari();
+            else if (sectiune === 'angajati') incarcaAngajati();
+            else if (sectiune === 'clienti') incarcaClienti();
+            else if (sectiune === 'servicii') incarcaServicii();
+            else if (sectiune === 'mesaje-contact') incarcaMesajeContact();
+        }
+
+        // formateaza data
+        function formateazaData(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('ro-RO', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        // badge status
+        function getBadge(status) {
+            const badges = {
+                'PENDING': '<span class="badge badge-pending">În așteptare</span>',
+                'CONFIRMED': '<span class="badge badge-confirmed">Confirmată</span>',
+                'COMPLETED': '<span class="badge badge-completed">Finalizată</span>',
+                'CANCELLED_BY_CLIENT': '<span class="badge badge-cancelled">Anulată client</span>',
+                'CANCELLED_BY_SALON': '<span class="badge badge-cancelled">Anulată salon</span>',
+                'NO_SHOW': '<span class="badge badge-noshow">Neprezentare</span>'
+            };
+            return badges[status] || status;
+        }
+        //inacarca mesaje
+        async function incarcaMesajeContact() {
+            try {
+                const response = await fetch(`${API_URL}/api/contact-messages`, {
+                    headers: getHeaders()
+                });
+
+                if (response.ok) {
+                    const mesaje = await response.json();
+
+                    document.getElementById('tabelMesajeContact').innerHTML = mesaje.length > 0
+                        ? [...mesaje].reverse().map(m => `
+                            <tr style="${m.status === 'NEW' ? 'background: #fffdf5;' : ''}">
+                                <td><strong>${m.fullName}</strong></td>
+                                <td>${m.phone}</td>
+                                <td>${m.email}</td>
+                                <td>${m.subject}</td>
+                                <td style="max-width: 300px; white-space: normal;">${m.message}</td>
+                                <td>
+                                    ${getContactStatusBadge(m.status)}
+                                    <br><br>
+
+                                    ${m.status !== 'RESOLVED' ? `
+                                        <button class="btn-action btn-confirm" onclick="actualizeazaStatusMesaj(${m.id}, 'READ')">
+                                            Citit
+                                        </button>
+                                        <button class="btn-action btn-complete" onclick="actualizeazaStatusMesaj(${m.id}, 'RESOLVED')">
+                                            Rezolvat
+                                        </button>
+                                    ` : ''}
+                                </td>
+                                <td>${formateazaData(m.createdAt)}</td>
+                            </tr>
+                        `).join('')
+                        : '<tr><td colspan="7" style="text-align:center; padding: 30px; color: var(--gri);">Nu există mesaje</td></tr>';
+                } else {
+                    document.getElementById('tabelMesajeContact').innerHTML =
+                        '<tr><td colspan="7" style="text-align:center; padding: 30px; color: #e74c3c;">Eroare la încărcarea mesajelor</td></tr>';
+                }
+            } catch (error) {
+                console.error('Eroare mesaje contact:', error);
+                document.getElementById('tabelMesajeContact').innerHTML =
+                    '<tr><td colspan="7" style="text-align:center; padding: 30px; color: #e74c3c;">Eroare de conexiune</td></tr>';
+            }
+        }
+        //actualizeaza status
+        async function actualizeazaStatusMesaj(id, status) {
+            try {
+                const response = await fetch(`${API_URL}/api/contact-messages/${id}/status?status=${status}`, {
+                    method: 'PATCH',
+                    headers: getHeaders()
+                });
+
+                if (response.ok) {
+                    incarcaMesajeContact();
+                } else {
+                    alert('Nu s-a putut actualiza statusul mesajului.');
+                }
+            } catch (error) {
+                console.error('Eroare la actualizarea statusului mesajului:', error);
+                alert('Eroare de conexiune.');
+            }
+        }
+        //badge status pentru mesajele de contact
+        function getContactStatusBadge(status) {
+            const badges = {
+                'NEW': '<span class="badge badge-pending">Nou</span>',
+                'READ': '<span class="badge badge-confirmed">Citit</span>',
+                'RESOLVED': '<span class="badge badge-completed">Rezolvat</span>'
+            };
+            return badges[status] || status;
+        }
+        //numele categoriei
+        const categorieNume = {
+            'HAIR': 'Coafură', 'NAILS': 'Unghii', 'MAKEUP': 'Machiaj',
+            'SKIN_CARE': 'Îngrijire Ten', 'EYEBROWS': 'Sprâncene',
+            'EYELASHES': 'Gene', 'MASSAGE': 'Masaj', 'SPA': 'Spa',
+            'AROMATHERAPY': 'Aromaterapie', 'REFLEXOLOGY': 'Reflexologie'
+        };
+
+        //STATISTICI
+        async function incarcaStatistici() {
+            const now = new Date();
+            const luna = now.getMonth() + 1;
+            const an = now.getFullYear();
+
+            document.getElementById('lunaAnul').textContent =
+                now.toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
+
+            try {
+                const response = await fetch(`${API_URL}/api/statistics/${an}/${luna}`, {
+                    headers: getHeaders()
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('statTotal').textContent = data.totalProgramari || 0;
+                    document.getElementById('statVenituri').textContent = (data.venituriTotale || 0).toFixed(0);
+                    document.getElementById('statNoShow').textContent = data.numarNoShow || 0;
+                    document.getElementById('statClientiNoi').textContent = data.clientiNoi || 0;
+                    document.getElementById('topServiciu').textContent = data.celMaiPopularServiciu || '—';
+                    document.getElementById('topAngajat').textContent = data.angajatulCuCeleMaiMulteProgramari || '—';
+
+                    // construieste graficul
+                    construiesteGrafic(data.programariPeZi || {});
+                }
+            } catch (error) {
+                console.error('Eroare la statistici:', error);
+            }
+        }
+
+        //construieste graficul cu bare
+        function construiesteGrafic(programariPeZi) {
+            const chart = document.getElementById('barChart');
+            const entries = Object.entries(programariPeZi);
+
+            if (entries.length === 0) {
+                chart.innerHTML = '<p style="color: var(--gri);">Nu sunt date disponibile</p>';
+                return;
+            }
+
+            const maxVal = Math.max(...entries.map(([, v]) => v));
+
+            chart.innerHTML = entries.map(([zi, val]) => `
+                <div class="bar-item">
+                    <div class="bar-value">${val}</div>
+                    <div class="bar" style="height: ${maxVal > 0 ? (val / maxVal) * 160 : 0}px"></div>
+                    <div class="bar-label">${zi.replace('Ziua ', '')}</div>
+                </div>
+            `).join('');
+        }
+
+        // PROGRAMARI 
+        let toateProgramarile = [];
+
+        async function incarcaProgramari() {
+            try {
+                const response = await fetch(`${API_URL}/api/appointments`, {
+                    headers: getHeaders()
+                });
+                if (response.ok) {
+                    toateProgramarile = await response.json();
+                    afiseazaProgramari(toateProgramarile);
+                }
+            } catch (error) {
+                console.error('Eroare programari:', error);
+            }
+        }
+
+        function filtreazaProgramari(status) {
+            const filtrate = status === 'ALL'
+                ? toateProgramarile
+                : toateProgramarile.filter(p => p.status === status);
+            afiseazaProgramari(filtrate);
+        }
+
+        function afiseazaProgramari(programari) {
+
+            //prioritate status
+            const statusOrder = {
+                'PENDING': 1,
+                'CONFIRMED': 2,
+                'COMPLETED': 3,
+                'CANCELLED_BY_CLIENT': 4,
+                'CANCELLED_BY_SALON': 5,
+                'NO_SHOW': 6
+            };
+
+            const programariSortate = [...programari].sort((a, b) => {
+                //sortare dupa status
+                const statusDiff = statusOrder[a.status] - statusOrder[b.status];
+                if (statusDiff !== 0) return statusDiff;
+
+                //sortare dupa data
+                return new Date(b.appointmentDateTime) - new Date(a.appointmentDateTime);
+            });
+
+            document.getElementById('tabelProgramari').innerHTML = programariSortate.length > 0
+                ? programariSortate.map(p => `
+                    <tr>
+                        <td><strong>${p.client?.firstName || ''} ${p.client?.lastName || ''}</strong></td>
+                        <td>${p.service?.name || 'N/A'}</td>
+                        <td>${p.employee?.firstName || ''} ${p.employee?.lastName || ''}</td>
+                        <td>${formateazaData(p.appointmentDateTime)}</td>
+                        <td>
+                            <strong>${p.service?.price || 0} RON</strong>
+                            ${p.discount > 0 ? `<br><span style="color: #27ae60; font-size: 12px;">🎟️ -${p.discount} RON cupon</span>` : ''}
+                            ${p.discount > 0 ? `<br><strong style="color: var(--auriu);">Total: ${(p.service?.price - p.discount).toFixed(0)} RON</strong>` : ''}
+                        </td>
+                        <td>${getBadge(p.status)}</td>
+                        <td>
+                            ${p.status === 'PENDING' ? `
+                                <button class="btn-action btn-confirm" onclick="confirma(${p.id})">Confirmă</button>
+                            ` : ''}
+                            ${p.status === 'CONFIRMED' ? `
+                                <button class="btn-action btn-complete" onclick="finalizeaza(${p.id})">Finalizează</button>
+                                <button class="btn-action btn-noshow" onclick="noShow(${p.id})">No-Show</button>
+                            ` : ''}
+                            ${p.status === 'PENDING' || p.status === 'CONFIRMED' ? `
+                                <button class="btn-action btn-cancel" onclick="anuleaza(${p.id})">Anulează</button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `).join('')
+                : '<tr><td colspan="7" style="text-align:center; padding: 30px; color: var(--gri);">Nu sunt programări</td></tr>';
+        }
+        //actiuni programari
+       async function confirma(id) {
+            await fetch(`${API_URL}/api/appointments/${id}/confirm`, { method: 'PATCH', headers: getHeaders() });
+            incarcaProgramari();
+        }
+
+        async function finalizeaza(id) {
+            await fetch(`${API_URL}/api/appointments/${id}/complete`, { method: 'PATCH', headers: getHeaders() });
+            incarcaProgramari();
+        }
+
+        async function noShow(id) {
+            await fetch(`${API_URL}/api/appointments/${id}/no-show`, { method: 'PATCH', headers: getHeaders() });
+            incarcaProgramari();
+        }
+
+        async function anuleaza(id) {
+            if (!confirm('Ești sigur că vrei să anulezi această programare?')) return;
+            await fetch(`${API_URL}/api/appointments/${id}/cancel-salon`, { method: 'PATCH', headers: getHeaders() });
+            incarcaProgramari();
+        }
+
+       
+        //ANGAJATI 
+        async function incarcaAngajati() {
+            try {
+                const response = await fetch(`${API_URL}/api/employees`, {
+                    headers: getHeaders()
+                });
+                if (response.ok) {
+                    const angajati = await response.json();
+                    document.getElementById('tabelAngajati').innerHTML = angajati.length > 0
+                        ? angajati.map(a => `
+                            <tr>
+                                <td><strong>${a.firstName} ${a.lastName}</strong></td>
+                                <td>${a.email || '—'}</td>
+                                <td>${a.role || '—'}</td>
+                                <td>${a.active ? '<span class="badge badge-completed">Activ</span>' : '<span class="badge badge-cancelled">Inactiv</span>'}</td>
+                            </tr>`).join('')
+                        : '<tr><td colspan="4" style="text-align:center; padding: 30px;">Nu sunt angajați</td></tr>';
+                }
+            } catch (error) {
+                console.error('Eroare angajati:', error);
+            }
+        }
+
+        //CLIENTI
+        async function incarcaClienti() {
+            try {
+                const response = await fetch(`${API_URL}/api/clients`, {
+                    headers: getHeaders()
+                });
+                if (response.ok) {
+                    const clienti = await response.json();
+                    document.getElementById('tabelClienti').innerHTML = clienti.length > 0
+                        ? clienti.map(c => `
+                            <tr>
+                                <td><strong>${c.firstName} ${c.lastName}</strong></td>
+                                <td>${c.email}</td>
+                                <td>${c.phone || '—'}</td>
+                                <td><strong>${c.loyaltyPoints || 0}</strong> puncte</td>
+                                <td>${c.noShowScore || 0}</td>
+                                <td>${c.blocked
+                                    ? '<span class="badge badge-cancelled">Blocat</span>'
+                                    : '<span class="badge badge-completed">Activ</span>'}</td>
+                            </tr>`).join('')
+                        : '<tr><td colspan="6" style="text-align:center; padding: 30px;">Nu sunt clienți</td></tr>';
+                }
+            } catch (error) {
+                console.error('Eroare clienti:', error);
+            }
+        }
+
+        //SERVICII
+        async function incarcaServicii() {
+            try {
+                const response = await fetch(`${API_URL}/api/salon-procedures`, {
+                    headers: getHeaders()
+                });
+                if (response.ok) {
+                    const servicii = await response.json();
+                    document.getElementById('tabelServicii').innerHTML = servicii.length > 0
+                        ? servicii.map(s => `
+                            <tr>
+                                <td><strong>${s.name}</strong></td>
+                                <td>${categorieNume[s.category] || s.category}</td>
+                                <td>⏱️ ${s.durationMinutes} min</td>
+                                <td><strong>${s.price} RON</strong></td>
+                                <td>${s.available
+                                    ? '<span class="badge badge-completed">Disponibil</span>'
+                                    : '<span class="badge badge-cancelled">Indisponibil</span>'}</td>
+                            </tr>`).join('')
+                        : '<tr><td colspan="5" style="text-align:center; padding: 30px;">Nu sunt servicii</td></tr>';
+                }
+            } catch (error) {
+                console.error('Eroare servicii:', error);
+            }
+        }
+        //MESAJE CONTACT
+        async function incarcaMesajeContact() {
+            try {
+                const response = await fetch(`${API_URL}/api/contact-messages`, {
+                    headers: getHeaders()
+                });
+
+                if (response.ok) {
+                    const mesaje = await response.json();
+
+                    document.getElementById('tabelMesajeContact').innerHTML = mesaje.length > 0
+                        ? [...mesaje].reverse().map(m => `
+                            <tr style="${m.status === 'NEW' ? 'background: #fffdf5;' : ''}">
+                                <td><strong>${m.fullName}</strong></td>
+                                <td>${m.phone}</td>
+                                <td>${m.email}</td>
+                                <td>${m.subject}</td>
+                                <td style="max-width: 300px; white-space: normal;">${m.message}</td>
+                                <td>
+                                    ${getContactStatusBadge(m.status)}
+                                    <br><br>
+
+                                    ${m.status !== 'RESOLVED' ? `
+                                        <button class="btn-action btn-confirm" onclick="actualizeazaStatusMesaj(${m.id}, 'READ')">
+                                            Citit
+                                        </button>
+                                        <button class="btn-action btn-complete" onclick="actualizeazaStatusMesaj(${m.id}, 'RESOLVED')">
+                                            Rezolvat
+                                        </button>
+                                    ` : ''}
+                                </td>
+                                <td>${formateazaData(m.createdAt)}</td>
+                            </tr>
+                        `).join('')
+                        : '<tr><td colspan="7" style="text-align:center; padding: 30px; color: var(--gri);">Nu există mesaje</td></tr>';
+                } else {
+                    document.getElementById('tabelMesajeContact').innerHTML =
+                        '<tr><td colspan="7" style="text-align:center; padding: 30px; color: #e74c3c;">Eroare la încărcarea mesajelor</td></tr>';
+                }
+            } catch (error) {
+                console.error('Eroare mesaje contact:', error);
+                document.getElementById('tabelMesajeContact').innerHTML =
+                    '<tr><td colspan="7" style="text-align:center; padding: 30px; color: #e74c3c;">Eroare de conexiune</td></tr>';
+            }
+        }
+        //logout
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        // initializare
+        if (verificaAutentificare()) {
+            document.getElementById('adminName').textContent = localStorage.getItem('userName');
+            document.getElementById('adminEmail').textContent = localStorage.getItem('userEmail');
+            incarcaStatistici();
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicii | Beauty & Wellness</title>
+    <link rel="icon" type="image/png" href="poze/icon2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --roz: #F8B4C8;
+            --roz-deschis: #FDE8F0;
+            --auriu: #C9A84C;
+            --auriu-deschis: #F5E6C8;
+            --alb: #FFFFFF;
+            --gri: #666666;
+            --negru: #333333;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            color: var(--negru);
+            background: var(--alb);
+        }
+
+        /* NAVBAR */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(10px);
+            padding: 12px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(201,168,76,0.1);
+            border-bottom: 1px solid var(--roz);
+        }
+
+        .logo img { height: 55px; object-fit: contain; }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--negru);
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--auriu); }
+
+        .btn-login {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            color: white !important;
+            padding: 10px 25px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(201,168,76,0.3);
+        }
+
+        /* HERO SERVICII */
+        .hero-servicii {
+            margin-top: 80px;
+            background: linear-gradient(135deg, var(--roz-deschis), var(--auriu-deschis));
+            padding: 60px 50px;
+            text-align: center;
+        }
+
+        .hero-servicii h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .hero-servicii h1 span {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-servicii p {
+            color: var(--gri);
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        /* bara de search */
+        .search-bar {
+            display: flex;
+            background: white;
+            border-radius: 50px;
+            padding: 8px 8px 8px 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+            border: 1px solid var(--roz);
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            font-size: 15px;
+            flex: 1;
+            font-family: 'Lato', sans-serif;
+            background: transparent;
+        }
+
+        .search-bar button {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .search-bar button:hover { transform: scale(1.05); }
+
+        /* FILTRE CATEGORII */
+        .filters {
+            padding: 30px 50px 0;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 10px 22px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: 'Lato', sans-serif;
+            transition: all 0.3s;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--auriu);
+            color: var(--auriu);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            color: white;
+            border-color: var(--auriu);
+            box-shadow: 0 5px 15px rgba(201,168,76,0.3);
+        }
+
+        /* GRILA SERVICII  */
+        .servicii-container {
+            padding: 40px 50px 80px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .results-count {
+            color: var(--gri);
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .servicii-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* sectiunea unui serviciu */
+        .serviciu-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .serviciu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--roz), var(--auriu));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .serviciu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(201,168,76,0.15);
+            border-color: var(--roz);
+        }
+
+        .serviciu-card:hover::before { transform: scaleX(1); }
+
+        /* categoria serviciului */
+        .serviciu-categorie {
+            display: inline-block;
+            background: var(--roz-deschis);
+            color: var(--auriu);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 15px;
+            margin-bottom: 12px;
+        }
+
+        .serviciu-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--negru);
+        }
+
+        .serviciu-card p {
+            color: var(--gri);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* footer-ul sectiuni */
+        .serviciu-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .serviciu-pret {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--auriu);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .serviciu-pret span {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--gri);
+            font-family: 'Lato', sans-serif;
+        }
+
+        .serviciu-durata {
+            color: var(--gri);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* butonul de programare */
+        .btn-programeaza {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--roz), #f0a0bc);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-programeaza:hover {
+            background: linear-gradient(135deg, var(--auriu), #e8c05a);
+            transform: translateY(-2px);
+        }
+
+        /* mesaj cand nu sunt servicii */
+        .no-results {
+            text-align: center;
+            padding: 60px;
+            color: var(--gri);
+            grid-column: 1/-1;
+        }
+
+        .no-results p { font-size: 18px; margin-top: 15px; }
+
+        /* loading */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--gri);
+            grid-column: 1/-1;
+            font-size: 16px;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px 50px;
+            text-align: center;
+        }
+
+        .footer-logo img { height: 50px; margin-bottom: 15px; }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover { color: var(--auriu); }
+
+        .footer-copy { color: #555; font-size: 12px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo">
+            <a href="index.html">
+                <img src="poze/logo.png" alt="Beauty & Wellness">
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Acasă</a></li>
+            <li><a href="servicii.html">Servicii</a></li>
+            <li><a href="index.html#programare">Programare</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="login.html" class="btn-login">Logare</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero-servicii">
+        <h1>Serviciile <span>Noastre</span></h1>
+        <p>Descoperă gama completă de tratamente și servicii de înfrumusețare premium</p>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Caută un serviciu... ex: manichiură, masaj">
+            <button onclick="cauta()">🔍 Caută</button>
+        </div>
+    </div>
+
+    <!-- FILTRE -->
+    <div class="filters" id="filters">
+        <button class="filter-btn active" onclick="filtreaza('ALL')">✨ Toate</button>
+        <button class="filter-btn" onclick="filtreaza('HAIR')">💇‍♀️ Coafură</button>
+        <button class="filter-btn" onclick="filtreaza('NAILS')">💅 Unghii</button>
+        <button class="filter-btn" onclick="filtreaza('MAKEUP')">💄 Machiaj</button>
+        <button class="filter-btn" onclick="filtreaza('SKIN_CARE')">✨ Îngrijire Ten</button>
+        <button class="filter-btn" onclick="filtreaza('EYEBROWS')">👁️ Sprâncene</button>
+        <button class="filter-btn" onclick="filtreaza('EYELASHES')">👀 Gene</button>
+        <button class="filter-btn" onclick="filtreaza('MASSAGE')">🌿 Masaj</button>
+        <button class="filter-btn" onclick="filtreaza('SPA')">🛁 Spa</button>
+        <button class="filter-btn" onclick="filtreaza('AROMATHERAPY')">🌸 Aromaterapie</button>
+        <button class="filter-btn" onclick="filtreaza('REFLEXOLOGY')">🦶 Reflexologie</button>
+    </div>
+
+    <!-- GRILA SERVICII -->
+    <div class="servicii-container">
+        <p class="results-count" id="resultsCount"></p>
+        <div class="servicii-grid" id="serviciiGrid">
+            <div class="loading">⏳ Se încarcă serviciile...</div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">
+            <img src="poze/logo.png" alt="Beauty & Wellness">
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Acasă</a>
+            <a href="servicii.html">Servicii</a>
+            <a href="index.html#contact">Contact</a>
+            <a href="termeni.html">Termeni și Condiții</a>
+            <a href="confidentialitate.html">Politică de Confidențialitate</a>
+        </div>
+        <div class="footer-copy">© 2026 Beauty & Wellness by M&G. Toate drepturile rezervate.</div>
+    </footer>
+
+    <script>
+        const API_URL = 'http://localhost:8080';
+
+        //toate serviciile incarcate din backend
+        let toateServiciile = [];
+        let categorieCurenta = 'ALL';
+
+        //emojii pentru fiecare categorie
+        const categorieEmoji = {
+            'HAIR': '💇‍♀️',
+            'NAILS': '💅',
+            'MAKEUP': '💄',
+            'SKIN_CARE': '✨',
+            'EYEBROWS': '👁️',
+            'EYELASHES': '👀',
+            'MASSAGE': '🌿',
+            'SPA': '🛁',
+            'AROMATHERAPY': '🌸',
+            'REFLEXOLOGY': '🦶'
+        };
+
+        // numele categoriilor in romana
+        const categorieNume = {
+            'HAIR': 'Coafură',
+            'NAILS': 'Unghii',
+            'MAKEUP': 'Machiaj',
+            'SKIN_CARE': 'Îngrijire Ten',
+            'EYEBROWS': 'Sprâncene',
+            'EYELASHES': 'Gene',
+            'MASSAGE': 'Masaj',
+            'SPA': 'Spa',
+            'AROMATHERAPY': 'Aromaterapie',
+            'REFLEXOLOGY': 'Reflexologie'
+        };
+
+        //incarca serviciile la deschiderea paginii
+        async function incarcaServicii() {
+            try {
+                const response = await fetch(`${API_URL}/api/salon-procedures`);
+                toateServiciile = await response.json();
+                afiseazaServicii(toateServiciile);
+
+                // verifica daca pagina a fost deschisa cu un filtru din URL
+                const params = new URLSearchParams(window.location.search);
+                const categorie = params.get('categorie');
+                if (categorie) filtreaza(categorie);
+
+            } catch (error) {
+                document.getElementById('serviciiGrid').innerHTML = `
+                    <div class="no-results">
+                        <p>⚠️ Nu s-au putut încărca serviciile.<br>Verifică dacă backend-ul rulează!</p>
+                    </div>`;
+            }
+        }
+
+        // afiseaza lista de servicii in grila
+        function afiseazaServicii(servicii) {
+            const grid = document.getElementById('serviciiGrid');
+            const count = document.getElementById('resultsCount');
+
+            count.textContent = `${servicii.length} servicii găsite`;
+
+            if (servicii.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results">
+                        <p>🔍 Nu s-au găsit servicii pentru această căutare.</p>
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = servicii.map(s => `
+                <div class="serviciu-card">
+                    <span class="serviciu-categorie">
+                        ${categorieEmoji[s.category] || '✨'} ${categorieNume[s.category] || s.category}
+                    </span>
+                    <h3>${s.name}</h3>
+                    <p>${s.description || 'Serviciu premium de înfrumusețare'}</p>
+                    <div class="serviciu-footer">
+                        <div class="serviciu-pret">
+                            ${s.price} <span>RON</span>
+                        </div>
+                        <div class="serviciu-durata">
+                            ⏱️ ${s.durationMinutes} min
+                        </div>
+                    </div>
+                    <button class="btn-programeaza" onclick="programeaza(${s.id}, '${s.name}')">
+                        📅 Programează-te
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        //filtreaza serviciile dupa categorie
+        function filtreaza(categorie) {
+            categorieCurenta = categorie;
+
+             //actualizeaza butonul activ
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick')?.includes(categorie)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            //filtreaza si afiseaza
+            const filtrate = categorie === 'ALL'
+                ? toateServiciile
+                : toateServiciile.filter(s => s.category === categorie);
+
+            //aplica si cautarea daca exista text in search
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const rezultate = query
+                ? filtrate.filter(s => s.name.toLowerCase().includes(query))
+                : filtrate;
+
+            afiseazaServicii(rezultate);
+        }
+
+        //cauta servicii dupa text
+        function cauta() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const filtrate = categorieCurenta === 'ALL'
+                ? toateServiciile
+                : toateServiciile.filter(s => s.category === categorieCurenta);
+
+            const rezultate = query
+                ? filtrate.filter(s => s.name.toLowerCase().includes(query) ||
+                    (s.description && s.description.toLowerCase().includes(query)))
+                : filtrate;
+
+            afiseazaServicii(rezultate);
+        }
+
+        //cautare in timp real
+        document.getElementById('searchInput').addEventListener('input', cauta);
+
+        //butonul programeaza-te
+        function programeaza(serviceId, serviceName) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                // daca nu e logat, duce la login
+                localStorage.setItem('serviceProgramare', serviceId);
+                localStorage.setItem('serviceNameProgramare', serviceName);
+                window.location.href = 'login.html';
+            } else {
+                // daca e logat, duce la dashboard
+                const role = localStorage.getItem('userRole');
+                if (role === 'Client') {
+                    window.location.href = `dashboard-client.html?serviceId=${serviceId}`;
+                } else {
+                    window.location.href = 'dashboard-client.html';
+                }
+            }
+        }
+
+        //incarca serviciile 
+        document.addEventListener('DOMContentLoaded', () => {
+            incarcaServicii();
+        });
+    </script>
+
+</body>
+</html>
